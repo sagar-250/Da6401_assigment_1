@@ -36,15 +36,16 @@ class NeuralNetwork:
     Main model class that orchestrates the neural network training and inference.
     """
 
-    def __init__(self,args):
-        self.in_size=args.input_size
-        self.hid_sizes=args.hidden_size
-        self.out_size=args.output_size
-        self.act=args.activation
-        self.w_init=args.weight_init
+    def __init__(self,cli_args):
+        self.in_size=cli_args.input_size
+        self.hid_sizes=cli_args.hidden_size
+        self.out_size=cli_args.output_size
+        self.act=cli_args.activation
+        self.w_init=cli_args.weight_init
         self.lyrs=[]
-        self.loss_fn=CrossEntropyLoss() if args.loss=='cross_entropy' else MSELoss()
+        self.loss_fn=CrossEntropyLoss() if cli_args.loss=='cross_entropy' else MSELoss()
         self._build_network()
+        self.layers=self.lyrs
 
     def _build_network(self):
         act_cls=acts[self.act.lower()]
@@ -53,13 +54,13 @@ class NeuralNetwork:
             a=act_cls if i<len(sizes)-2 else Softmax
             self.lyrs.append(Layer(sizes[i],sizes[i+1],a,weight_init=self.w_init))
 
-    def forward(self,x):
-        out=x
+    def forward(self,X):
+        out=X
         for lyr in self.lyrs:
             out=lyr.forward(out)
         return out
 
-    def backward(self,ytrue,ypred):
+    def backward(self,y_true,y_pred):
         g=self.loss_fn.derivative()
         for lyr in reversed(self.lyrs):
             g=lyr.backward(g)
@@ -125,8 +126,8 @@ class NeuralNetwork:
             if callback:
                 callback(metrics)
 
-    def evaluate(self,x,y):
-        ypred=self.forward(x)
+    def evaluate(self,X,y):
+        ypred=self.forward(X)
         loss=self.loss_fn.loss(y,ypred)
         acc=np.mean(np.argmax(ypred,axis=1)==np.argmax(y,axis=1))
         f1=compute_f1_score(y,ypred)
