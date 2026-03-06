@@ -1,0 +1,22 @@
+{
+    "dataset": "mnist",
+    "input_size": 784,
+    "hidden_sizes": [
+        64,
+        64
+    ],
+    "output_size": 10,
+    "activation": "sigmoid",
+    "weight_init": "xavier",
+    "loss": "cross_entropy",
+    "optimizer": "sgd",
+    "learning_rate": 0.005,
+    "batch_size": 32,
+    "epochs": 10,
+    "weight_decay": 0,
+    "best_test_f1": 0.8101217659271562,
+    "best_val_f1": 0.8099342427950497,
+    "best_val_acc": 0.8176666666666667,
+    "convergence_epoch": 10,
+    "wandb_run_id": "eyrocjvy"
+}
