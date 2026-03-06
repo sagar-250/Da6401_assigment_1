@@ -9,25 +9,6 @@ from .neural_layer import Layer
 from .activations import Sigmoid, ReLU, Tanh, Softmax
 from .objective_functions import CrossEntropyLoss, MSELoss
 
-def compute_f1_score(ytrue,ypred,num_classes=10):
-    if len(ytrue.shape)>1 and ytrue.shape[1]>1:
-        ytrue=np.argmax(ytrue,axis=1)
-    if len(ypred.shape)>1 and ypred.shape[1]>1:
-        ypred=np.argmax(ypred,axis=1)
-    
-    scores=[]
-    for cls in range(num_classes):
-        tp=np.sum((ytrue==cls)&(ypred==cls))
-        fp=np.sum((ytrue!=cls)&(ypred==cls))
-        fn=np.sum((ytrue==cls)&(ypred!=cls))
-        
-        prec=tp/(tp+fp) if (tp+fp)>0 else 0
-        rec=tp/(tp+fn) if (tp+fn)>0 else 0
-        
-        f1=2*(prec*rec)/(prec+rec) if (prec+rec)>0 else 0
-        scores.append(f1)
-    
-    return np.mean(scores)
 
 acts={'relu':ReLU,'sigmoid':Sigmoid,'tanh':Tanh,'softmax':Softmax}
 
@@ -148,3 +129,23 @@ class NeuralNetwork:
                 lyr.W=wdict[wk].copy()
             if bk in wdict:
                 lyr.b=wdict[bk].copy()
+                
+def compute_f1_score(ytrue,ypred,num_classes=10):
+    if len(ytrue.shape)>1 and ytrue.shape[1]>1:
+        ytrue=np.argmax(ytrue,axis=1)
+    if len(ypred.shape)>1 and ypred.shape[1]>1:
+        ypred=np.argmax(ypred,axis=1)
+    
+    scores=[]
+    for cls in range(num_classes):
+        tp=np.sum((ytrue==cls)&(ypred==cls))
+        fp=np.sum((ytrue!=cls)&(ypred==cls))
+        fn=np.sum((ytrue==cls)&(ypred!=cls))
+        
+        prec=tp/(tp+fp) if (tp+fp)>0 else 0
+        rec=tp/(tp+fn) if (tp+fn)>0 else 0
+        
+        f1=2*(prec*rec)/(prec+rec) if (prec+rec)>0 else 0
+        scores.append(f1)
+    
+    return np.mean(scores)
