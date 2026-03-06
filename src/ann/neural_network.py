@@ -80,7 +80,13 @@ class NeuralNetwork:
             lyr.W=self.w_opts[i].update(lyr.W,lyr.grad_W)
             lyr.b=self.b_opts[i].update(lyr.b,lyr.grad_b)
 
-    def train(self,xtr,ytr,opt,epochs=1,batch_size=32,xval=None,yval=None,callback=None):
+    def train(self,X_train,y_train,optimizer,epochs=1,batch_size=32,X_val=None,y_val=None,epoch_callback=None):
+        xtr=X_train
+        ytr=y_train
+        opt=optimizer
+        xval=X_val
+        yval=y_val
+        callback=epoch_callback
         self.w_opts=[copy.deepcopy(opt) for _ in self.lyrs]
         self.b_opts=[copy.deepcopy(opt) for _ in self.lyrs]
         n=xtr.shape[0]
